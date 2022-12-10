@@ -1,0 +1,107 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<Table>
+@inject UserManager<AppUser> UserManager
+
+@{
+    ViewData["Title"] = "Asztal foglalás";
+}
+
+    @{
+        var user = await UserManager.GetUserAsync(this.User);
+    }
+
+    @{
+        if ((user == null || user.IsAdmin == false))
+        {
+            <div class="text-center">
+                <h1 class="display-4">Asztal foglalása</h1>
+                <hr/>
+            </div>
+         <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var table in Model)
+            {
+                if (!table.Reserved)
+                {
+                   <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col">
+                        <div class="card" style="width: 25rem">
+                            <div class="card-body">
+                                <h5 class="card-title">@table.Name</h5>
+                                <ul>Kapacitás: @table.Capacity Fő</ul>
+                            </div>
+                                <a class="btn" href="Home/Reserv?tableId=@table.Id">Foglal</a>
+                        </div>
+                    </div>
+                </div>
+                }
+            }
+        </div>
+             <div class="text-center">
+                <h1 class="display-4">Foglalt asztalok</h1>
+                <hr />
+            </div>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var table in Model)
+            {
+                if (table.Reserved)
+                {
+                    <div class="col">
+                        <div class="card" style="width: 25rem">
+                            <div class="card-body">
+                                <h5 class="card-title">@table.Name</h5>
+                                <ul>Kapacitás: @table.Capacity Fő</ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        }
+        else
+        {
+            <div class="text-center">
+                <h1 class="display-4">Szabad asztalok</h1>
+                <hr />
+            </div>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var table in Model)
+            {
+                if (!table.Reserved)
+                {
+                    <div class="col">
+                        <div class="card" style="width: 25rem">
+                            <div class="card-body">
+                                <h5 class="card-title">@table.Name</h5>
+                                <ul>Kapacitás: @table.Capacity Fő</ul>
+                            </div>
+                            <a class="btn" href="Home/AdminDelete?uid=@table.Id">Törlés</a>
+                            <a class="btn" href="Home/AdminLock?uid=@table.Id">Zárolás</a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+            <div class="text-center">
+                <h1 class="display-4">Foglalt asztalok</h1>
+                <hr />
+            </div>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var table in Model)
+            {
+                if (table.Reserved)
+                {
+                    <div class="col">
+                        <div class="card" style="width: 25rem">
+                            <div class="card-body">
+                                <h5 class="card-title">@table.Name</h5>
+                                <ul>Kapacitás: @table.Capacity Fő</ul>
+                            </div>
+                            <a class="btn" href="Home/AdminFree?uid=@table.Id">Felszabadít</a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        }
+    }

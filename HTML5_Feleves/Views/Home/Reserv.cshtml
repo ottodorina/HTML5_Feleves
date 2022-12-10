@@ -1,0 +1,64 @@
+﻿@model HTML5_Feleves.Models.Reservation
+@{
+    ViewData["Title"] = "Foglalás";
+}
+@{
+    Table table = ViewBag.Table;
+}
+
+<h4>Asztal foglalás</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Reserv" enctype="multipart/form-data" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact" class="control-label"></label>
+                <input asp-for="Contact" class="form-control" />
+                <span asp-validation-for="Contact" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Begin" class="control-label"></label>
+                <input asp-for="Begin" asp-format="{0:dd/MM/yyyy HH:mm}" class="form-control" />
+                <span asp-validation-for="Begin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="End" class="control-label"></label>
+                <input asp-for="End" asp-format="{0:dd/MM/yyyy HH:mm}" class="form-control" />
+                <span asp-validation-for="End" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Person" class="control-label"></label>
+                <input asp-for="Person" asp-format="number" min="0" max="20" step="1" class="form-control" />
+                <span asp-validation-for="Person" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="Table.Id" class="control-label"></label>
+                <input asp-for="Table.Id" value="@table.Id" class="form-control" readonly="readonly" />
+                <span asp-validation-for="Table.Id" class="text-danger"></span>
+            </div>
+@*            <div class="form-group" hidden>
+                <label asp-for="Table.Name" class="control-label"></label>
+                <input asp-for="Table.Name" value="@table.Name" class="form-control" readonly="readonly" />
+                <span asp-validation-for="Table.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="Table.Capacity" class="control-label"></label>
+                <input asp-for="Table.Capacity" value="@table.Capacity" class="form-control" readonly="readonly" />
+                <span asp-validation-for="Table.Capacity" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <input asp-page-handler="Upload" class="btn" type="submit" value="Felvitel">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn">Vissza </a>
+</div>
