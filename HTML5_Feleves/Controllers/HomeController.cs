@@ -44,36 +44,6 @@ namespace HTML5_Feleves.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin")]
-        public IActionResult Admin()
-        {
-            return View(_db.Tables);
-        }
-
-        [Authorize(Roles = "Admin")]
-        public IActionResult Users()
-        {
-            return View(_userManager.Users);
-        }
-
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RemoveAdmin(string uid)
-        {
-            var user = _userManager.Users.FirstOrDefault(t => t.Id == uid);
-            user.IsAdmin = false;
-            await _userManager.RemoveFromRoleAsync(user, "Admin");
-            return RedirectToAction(nameof(Users));
-        }
-
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GrantAdmin(string uid)
-        {
-            var user = _userManager.Users.FirstOrDefault(t => t.Id == uid);
-            user.IsAdmin = true;
-            await _userManager.AddToRoleAsync(user, "Admin");
-            return RedirectToAction(nameof(Users));
-        }
-
         public IActionResult Index()
         {
             return View(_db.Tables);
@@ -100,6 +70,30 @@ namespace HTML5_Feleves.Controllers
             var user = await _userManager.GetUserAsync(this.User);
             await _emailSender.SendEmailAsync(user.FirstName, "Table added!", $"{table.Name}");
 
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult Edit(int tableId)
+        {
+            var table = _db.Tables.FirstOrDefault(t => t.Id == tableId);
+            ViewBag.Table = table;
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult Edit(Models.Table table)
+        {
+            if (table != null)
+            {
+                _db.Tables.Update(table);
+                _db.SaveChanges();
+            }
+            else
+            {
+                return StatusCode(500);
+            }
             return RedirectToAction(nameof(Index));
         }
 
